@@ -87,7 +87,6 @@ class IPS_Tasmota extends TasmotaService {
 			  $data = json_decode($JSONString);
 			  $off = $this->ReadPropertyString("Off");
         $on = $this->ReadPropertyString("On");
-			  $toggle = $this->ReadPropertyString("Toggle");
 			  $hold = $this->ReadPropertyString("Hold");
 
 			  // Buffer decodieren und in eine Variable schreiben
