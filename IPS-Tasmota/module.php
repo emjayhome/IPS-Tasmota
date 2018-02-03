@@ -8,8 +8,9 @@ class IPS_Tasmota extends TasmotaService {
     $this->ConnectParent("{EE0D345A-CF31-428A-A613-33CE98E752DD}");
     //Anzahl die in der Konfirgurationsform angezeigt wird - Hier Standard auf 1
     $this->RegisterPropertyString("Topic","");
-    $this->RegisterPropertyString("On","1");
-    $this->RegisterPropertyString("Off","0");
+    $this->RegisterPropertyString("On","ON");
+    $this->RegisterPropertyString("Off","OFF");
+    $this->RegisterPropertyString("Hold","HOLD");
     $this->RegisterPropertyString("FullTopic","%prefix%/%topic%");
     $this->RegisterPropertyInteger("PowerOnState",3);
     $this->RegisterPropertyString("DeviceLanguage","en");
@@ -85,7 +86,9 @@ class IPS_Tasmota extends TasmotaService {
         $this->SendDebug("ReceiveData JSON", $JSONString,0);
 			  $data = json_decode($JSONString);
 			  $off = $this->ReadPropertyString("Off");
-			  $on = $this->ReadPropertyString("On");
+        $on = $this->ReadPropertyString("On");
+			  $toggle = $this->ReadPropertyString("Toggle");
+			  $hold = $this->ReadPropertyString("Hold");
 
 			  // Buffer decodieren und in eine Variable schreiben
 			  $Buffer = utf8_decode($data->Buffer);
@@ -118,6 +121,10 @@ class IPS_Tasmota extends TasmotaService {
                 break;
               case $on:
               SetValue($this->GetIDForIdent("Tasmota_".$power[$lastKey]), 1);
+              break;
+              case $hold:
+              $this->RegisterVariableBoolean("Tasmota_".$power[$lastKey]."_Hold", $power[$lastKey]."_Hold","~Switch");
+              SetValueBoolean($this->GetIDForIdent("Tasmota_".$power[$lastKey]."_Hold"), !GetValueBoolean($this->GetIDForIdent("Tasmota_".$power[$lastKey]."_Hold")));
               break;
             }
           }
