@@ -21,6 +21,7 @@ class Tasmota extends TasmotaService
         $this->RegisterPropertyString('Topic', '');
         $this->RegisterPropertyString('On', 'ON');
         $this->RegisterPropertyString('Off', 'OFF');
+        $this->RegisterPropertyString('Hold', 'HOLD');
         $this->RegisterPropertyString('FullTopic', '%prefix%/%topic%');
         $this->RegisterPropertyInteger('PowerOnState', 3);
         $this->RegisterPropertyInteger('GatewayMode', 0);
@@ -76,6 +77,7 @@ class Tasmota extends TasmotaService
             }
             $off = $this->ReadPropertyString('Off');
             $on = $this->ReadPropertyString('On');
+            $hold = $this->ReadPropertyString('Hold');
 
             //PowerOnState Vairablen setzen
             if (fnmatch('*PowerOnState*', $Buffer->Payload)) {
@@ -110,6 +112,10 @@ class Tasmota extends TasmotaService
                 case $on:
                 SetValue($this->GetIDForIdent('Tasmota_' . $power[$lastKey]), 1);
                 break;
+                case $hold:
+                    $this->RegisterVariableBoolean("Tasmota_".$power[$lastKey]."_Hold", $power[$lastKey]."_Hold","~Switch");
+                    SetValueBoolean($this->GetIDForIdent("Tasmota_".$power[$lastKey]."_Hold"), !GetValueBoolean($this->GetIDForIdent("Tasmota_".$power[$lastKey]."_Hold")));
+                    break;
               }
                     }
                 }
