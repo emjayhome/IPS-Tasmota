@@ -21,6 +21,11 @@
         },
         {
             "type": "ValidationTextBox",
+            "name": "Hold",
+            "caption": "Power Hold"
+        },
+        {
+            "type": "ValidationTextBox",
             "name": "FullTopic",
             "caption": "Full Topic"
         },
